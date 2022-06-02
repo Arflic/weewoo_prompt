@@ -163,6 +163,10 @@ const GenericCrudTable = ({
     );
   };
 
+  const handleDeleteModel = async () => {
+    handleModelAction(model => modelData.deleteModel(model[modelId]));
+  };
+
   const handleModelAction = async (action, alertMsgLabel = undefined) => {
     if (!enteredModel) {
       openAlert({ display: true, message: 'No model found', severity: 'error' });
@@ -260,6 +264,9 @@ const GenericCrudTable = ({
         <DialogActions style={{ justifyContent: 'space-evenly' }}>
           <Button onClick={closeModal} color='default'>
             Cancel
+          </Button>
+          <Button onClick={async () => await handleDeleteModel()} color='default'>
+            Delete
           </Button>
           <Button autoFocus onClick={async () => await handlePostOrPutModel()} color='primary'>
             Confirm
