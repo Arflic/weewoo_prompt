@@ -97,6 +97,7 @@ const GenericCrudTable = ({
     severity: 'error',
   });
   const [editMode, setEditMode] = React.useState(false);
+  const [myListMode, setMyListMode] = React.useState(false);
   const componentMounted = React.useRef(true);
   const [models, setModels] = React.useState([]);
   const [enteredModel, setEnteredModel] = React.useState(defaultModel);
@@ -114,10 +115,10 @@ const GenericCrudTable = ({
     (async () => {
       await UpdateModels();
     })();
-  }, []);
+  }, [myListMode]);
 
   const UpdateModels = async () => {
-    const modelsResult = await modelData.getModels().catch(_e => {
+    const modelsResult = await modelData.getModels(myListMode).catch(_e => {
       openAlert({ display: true, message: 'Listed models failed to load', severity: 'error' });
       return [];
     });
@@ -290,6 +291,16 @@ const GenericCrudTable = ({
                 </Tooltip>
               </div>
             )}
+            <FormControlLabel
+              value='start'
+              control={<Switch color='primary' />}
+              label='My List'
+              labelPlacement='start'
+              checked={myListMode}
+              onChange={_e => {
+                setMyListMode(!myListMode);
+              }}
+            />
             <div>
               <TextField
                 className={classes.textField}

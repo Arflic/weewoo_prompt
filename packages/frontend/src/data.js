@@ -13,12 +13,20 @@ class Data {
     return localStorage.getItem('refreshToken');
   }
 
+  getUsernameToken() {
+    return localStorage.getItem('usernameToken');
+  }
+
   setAccessToken(v) {
     localStorage.setItem('accessToken', v);
   }
 
   setRefreshToken(v) {
     localStorage.setItem('refreshToken', v);
+  }
+
+  setUsernameToken(v) {
+    localStorage.setItem('usernameToken', v);
   }
 
   async refreshAuth() {
@@ -59,6 +67,7 @@ class Data {
       .then(r => {
         this.setAccessToken(r.data.access);
         this.setRefreshToken(r.data.refresh);
+        this.setUsernameToken(username);
         return r.data;
       });
   }
@@ -85,9 +94,10 @@ class Data {
       .then(r => r.data);
   }
 
-  async _getMoviesHelper() {
+  async _getMoviesHelper(filterByUser = false) {
+    const filter = filterByUser ? `?creator__username=${this.getUsernameToken()}` : '';
     return axios
-      .get(this.baseUrl + '/api/v1/movies/', {
+      .get(this.baseUrl + `/api/v1/movies/${filter}`, {
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -97,8 +107,8 @@ class Data {
       .then(r => r.data.results);
   }
 
-  async getMovies() {
-    return await this._getMoviesHelper().catch(
+  async getMovies(filterByUser) {
+    return await this._getMoviesHelper(filterByUser).catch(
       async _e => await this.refreshToken().then(async _r => await this._getMoviesHelper())
     );
   }
@@ -174,7 +184,6 @@ class Data {
       async _e => await this.refreshToken().then(async _r => await this._patchMovieHelper(id, movie))
     );
   }
-
 }
 
 export const data = new Data();
