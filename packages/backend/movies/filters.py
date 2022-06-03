@@ -10,7 +10,8 @@ class MovieFilter(filters.FilterSet):
   year__gt = filters.NumberFilter(field_name='year', lookup_expr='gt')
   year__lt = filters.NumberFilter(field_name='year', lookup_expr='lt')
   creator__username = filters.CharFilter(lookup_expr='icontains')
+  rating = filters.NumberFilter()
 
   class Meta:
     model = Movie
-    fields = ['title', 'genre', 'year', 'year__gt', 'year__lt', 'creator__username']
+    fields = ['title', 'genre', 'year', 'year__gt', 'year__lt', 'creator__username', 'rating']
